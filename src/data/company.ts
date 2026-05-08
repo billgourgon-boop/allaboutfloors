@@ -3,9 +3,8 @@ export const company = {
   legalName: 'All About Floors NW LLC',
   tagline: 'Vancouver\'s Most Trusted Flooring Experts Since 1999',
   description: 'All About Floors NW is a locally owned flooring company serving Vancouver, WA and the greater Clark County and Portland metro area. With over 25 years of experience, we provide premium flooring products and professional installation services.',
-  phone: '(360) 947-2876',
-  phoneDashes: '360-947-2876',
-  email: 'info@allaboutfloorsnw.com',
+  phone: '(360) 525-2962',
+  phoneDashes: '360-525-2962',
   address: {
     street: '6700 NE 152nd Ave #140',
     city: 'Vancouver',
@@ -65,6 +64,6 @@ export const company = {
     primary: 'Get Your Free Estimate',
     secondary: 'Call Us Today',
     estimate: '/free-estimate/',
-    phone: 'tel:3609472876',
+    phone: 'tel:3605252962',
   },
 };
