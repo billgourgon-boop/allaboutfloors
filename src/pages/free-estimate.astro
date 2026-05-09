@@ -329,6 +329,45 @@ const faqs = [
   <!-- LeadConnector form auto-resize script -->
   <script src="https://link.msgsndr.com/js/form_embed.js" is:inline></script>
 
+  <!-- Redirect to /book-in-home/ after the survey is submitted -->
+  <script is:inline>
+    (function () {
+      function isSurveySuccess(payload) {
+        if (!payload) return false;
+        if (typeof payload === 'string') {
+          const s = payload.toLowerCase();
+          return s.includes('form-submission-success') ||
+                 s.includes('survey-submission-success') ||
+                 (s.includes('submission') && s.includes('success'));
+        }
+        if (typeof payload === 'object') {
+          const t = (payload.type || payload.event || '').toString().toLowerCase();
+          if (t.includes('survey') || t.includes('form') || t.includes('submission')) {
+            if (t.includes('success') || t.includes('completed') || t.includes('submitted')) {
+              return true;
+            }
+          }
+          if (payload.success === true && (payload.contactId || payload.submissionId)) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      window.addEventListener('message', function (e) {
+        const okOrigin = typeof e.origin === 'string' && (
+          e.origin.includes('leadconnectorhq.com') ||
+          e.origin.includes('msgsndr.com') ||
+          e.origin.includes('gohighlevel.com')
+        );
+        if (!okOrigin) return;
+        if (isSurveySuccess(e.data)) {
+          window.location.href = '/book-in-home/';
+        }
+      });
+    })();
+  </script>
+
   <!-- 9. Trust strip footer -->
   <div class="bg-brand-dark text-gray-300 py-5 border-t border-white/10">
     <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs md:text-sm">
