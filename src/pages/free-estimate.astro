@@ -354,24 +354,48 @@ const faqs = [
   <!-- Redirect to /choose-appointment/ after the survey is submitted -->
   <script is:inline>
     (function () {
+      let redirected = false;
+      function go() {
+        if (redirected) return;
+        redirected = true;
+        window.location.href = '/choose-appointment/';
+      }
+
+      // Recursively flatten payload to a searchable string (handles nested objects)
+      function flatten(obj, depth) {
+        if (depth > 3) return '';
+        if (obj == null) return '';
+        if (typeof obj === 'string') return obj;
+        if (typeof obj === 'number' || typeof obj === 'boolean') return String(obj);
+        if (typeof obj !== 'object') return '';
+        try {
+          return Object.keys(obj).map(k => k + ':' + flatten(obj[k], depth + 1)).join(' ');
+        } catch (_) {
+          return '';
+        }
+      }
+
       function isSurveySuccess(payload) {
         if (!payload) return false;
-        if (typeof payload === 'string') {
-          const s = payload.toLowerCase();
-          return s.includes('form-submission-success') ||
-                 s.includes('survey-submission-success') ||
-                 (s.includes('submission') && s.includes('success'));
+        const flat = (typeof payload === 'string' ? payload : flatten(payload, 0)).toLowerCase();
+        if (!flat) return false;
+        // Reject obvious non-success chatter
+        if (flat.includes('error') || flat.includes('failed')) return false;
+        // Direct event name matches
+        if (flat.includes('form-submission-success')) return true;
+        if (flat.includes('survey-submission-success')) return true;
+        if (flat.includes('form-submitted')) return true;
+        if (flat.includes('survey-submitted')) return true;
+        if (flat.includes('submission-success')) return true;
+        if (flat.includes('submission-completed')) return true;
+        // Combined pattern: (form|survey|submission) + (success|submitted|completed)
+        if ((flat.includes('survey') || flat.includes('form') || flat.includes('submission')) &&
+            (flat.includes('success') || flat.includes('submitted') || flat.includes('completed'))) {
+          return true;
         }
+        // Payload includes a contactId or submissionId — implies submission persisted
         if (typeof payload === 'object') {
-          const t = (payload.type || payload.event || '').toString().toLowerCase();
-          if (t.includes('survey') || t.includes('form') || t.includes('submission')) {
-            if (t.includes('success') || t.includes('completed') || t.includes('submitted')) {
-              return true;
-            }
-          }
-          if (payload.success === true && (payload.contactId || payload.submissionId)) {
-            return true;
-          }
+          if (payload.contactId || payload.submissionId) return true;
         }
         return false;
       }
@@ -383,9 +407,7 @@ const faqs = [
           e.origin.includes('gohighlevel.com')
         );
         if (!okOrigin) return;
-        if (isSurveySuccess(e.data)) {
-          window.location.href = '/choose-appointment/';
-        }
+        if (isSurveySuccess(e.data)) go();
       });
     })();
   </script>
