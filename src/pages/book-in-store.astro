@@ -244,18 +244,20 @@ function formatDate(dateStr: string) {
         try { console.log.apply(console, ['[booking-debug]'].concat([].slice.call(arguments))); } catch (_) {}
       }
 
-      let fired = false;
       function show(reason) {
-        if (fired) return;
-        fired = true;
+        // Window-scoped dedup — survives multiple script instances on the same page
+        if (window.__aafnwScheduleFired) return;
+        window.__aafnwScheduleFired = true;
         dlog('show() reason:', reason);
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
         document.body.style.overflow = 'hidden';
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (typeof window.fbq === 'function') {
-          window.fbq('track', 'Schedule');
-          dlog('fbq Schedule fired');
+          // eventID lets Meta dedup with any server-side / GHL-side Schedule fire
+          const eventID = 'aafnw-schedule-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+          window.fbq('track', 'Schedule', {}, { eventID: eventID });
+          dlog('fbq Schedule fired, eventID=', eventID);
         } else {
           dlog('fbq not loaded — Schedule NOT fired');
         }
