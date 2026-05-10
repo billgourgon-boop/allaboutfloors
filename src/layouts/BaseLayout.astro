@@ -32,6 +32,7 @@ const { title, description, canonicalURL, ogImage, noIndex, schema, bare = false
         Array.isArray(schema) ? { '@context': 'https://schema.org', '@graph': schema } : schema
       )} />
     )}
+    <slot name="head" />
   </head>
   <body class="flex flex-col min-h-screen">
     {!bare && <Header />}
