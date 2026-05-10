@@ -7,16 +7,16 @@ import { company } from '@data/company';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
-  name: 'Book Your Free In-Home Flooring Estimate',
+  name: 'Book Your Free Flooring Estimate Appointment',
   url: 'https://www.allaboutfloorsnw.com/free-estimate/',
-  description: 'Book a free in-home flooring estimate from All About Floors NW in Vancouver, WA. Samples brought to your home. No pressure, no obligation.',
+  description: 'Book a free flooring estimate appointment with All About Floors NW in Vancouver, WA. Pick in-home or showroom. No pressure, no obligation.',
 };
 
 const benefitStrip = [
   '⭐ 5.0 stars · 100+ verified Google reviews',
   'Same-week appointments across Clark County',
-  'Free in-home estimate',
-  'Samples brought to your home',
+  'Free flooring estimates',
+  'In-home or showroom appointments',
   'Family-owned since 1999, no subcontractors',
 ];
 
@@ -74,8 +74,8 @@ const faqs = [
 ---
 
 <BaseLayout
-  title="Book Your Free In-Home Flooring Estimate | All About Floors NW, Vancouver WA"
-  description="Free in-home flooring estimate in Vancouver, WA. Samples brought to your home. No pressure, no obligation. Same-week appointments. Call (360) 525-2962."
+  title="Book Your Free Flooring Estimate | All About Floors NW, Vancouver WA"
+  description="Free flooring estimate in Vancouver, WA. Choose in-home or showroom appointment. No pressure, no obligation. Same-week appointments. Call (360) 525-2962."
   schema={schema}
   bare={true}
 >
@@ -157,7 +157,7 @@ const faqs = [
         </div>
 
         <h1 class="font-heading font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
-          Free In-Home <span class="text-brand-gold">Flooring Estimate.</span>
+          Free <span class="text-brand-gold">Flooring Estimate.</span>
         </h1>
 
         <p class="text-white text-2xl md:text-3xl font-heading font-semibold leading-snug mb-5 max-w-xl">
@@ -165,7 +165,7 @@ const faqs = [
         </p>
 
         <p class="text-gray-200 text-lg leading-relaxed max-w-lg">
-          Samples brought right to your couch.
+          Tell us a little about your project — we'll set up the appointment that works best for you. In-home or in our showroom, your call.
         </p>
       </div>
 
@@ -351,7 +351,7 @@ const faqs = [
   <!-- LeadConnector form auto-resize script -->
   <script src="https://link.msgsndr.com/js/form_embed.js" is:inline></script>
 
-  <!-- Redirect to /book-in-home/ after the survey is submitted -->
+  <!-- Redirect to /choose-appointment/ after the survey is submitted -->
   <script is:inline>
     (function () {
       function isSurveySuccess(payload) {
@@ -384,7 +384,7 @@ const faqs = [
         );
         if (!okOrigin) return;
         if (isSurveySuccess(e.data)) {
-          window.location.href = '/book-in-home/';
+          window.location.href = '/choose-appointment/';
         }
       });
     })();

@@ -27,6 +27,25 @@ function formatDate(dateStr: string) {
   bare={true}
   noIndex={true}
 >
+  <!-- Meta Pixel Code (in <head>) — Schedule fires on booking confirmation -->
+  <Fragment slot="head">
+    <script is:inline>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1975197519985839');
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1975197519985839&ev=PageView&noscript=1"
+    /></noscript>
+  </Fragment>
+
   <!-- Marquee strip -->
   <div class="bg-red-600 text-white overflow-hidden border-y border-red-800/40 shadow-md relative">
     <div class="marquee-track flex whitespace-nowrap py-2.5 text-sm font-semibold tracking-wide">
@@ -200,13 +219,13 @@ function formatDate(dateStr: string) {
         </svg>
       </div>
       <h2 id="thank-you-heading" class="font-heading font-bold text-2xl md:text-3xl text-brand-navy mb-3">
-        Thank you!
+        Thanks for booking!
       </h2>
       <p class="text-gray-600 leading-relaxed mb-6">
         Your showroom appointment is booked. We'll see you at the showroom — a confirmation has been sent to your inbox.
       </p>
       <a href="/" class="btn-primary w-full justify-center">
-        Back to the Site
+        Back to Website
       </a>
     </div>
   </div>
@@ -214,37 +233,67 @@ function formatDate(dateStr: string) {
   <!-- LeadConnector embed script (handles auto-resize) -->
   <script src="https://link.msgsndr.com/js/form_embed.js" is:inline></script>
 
-  <!-- Show thank-you overlay on successful booking -->
+  <!-- Show thank-you overlay + fire Meta Pixel Schedule event on successful booking -->
   <script is:inline>
     (function () {
       const overlay = document.getElementById('booking-thank-you');
       if (!overlay) return;
 
+      let fired = false;
       function show() {
+        if (fired) return;
+        fired = true;
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
         document.body.style.overflow = 'hidden';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (typeof window.fbq === 'function') {
+          window.fbq('track', 'Schedule');
+        }
+      }
+
+      // Fallback trigger: if GHL is configured to redirect to ?booked=1
+      // after submission, show the overlay immediately on page load.
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('booked') === '1' || params.get('thank-you') === '1') {
+          show();
+        }
+      } catch (_) {}
+
+      function flatten(obj, depth) {
+        if (depth > 3) return '';
+        if (obj == null) return '';
+        if (typeof obj === 'string') return obj;
+        if (typeof obj === 'number' || typeof obj === 'boolean') return String(obj);
+        if (typeof obj !== 'object') return '';
+        try {
+          return Object.keys(obj).map(k => k + ':' + flatten(obj[k], depth + 1)).join(' ');
+        } catch (_) {
+          return '';
+        }
       }
 
       function isBookingSuccess(payload) {
         if (!payload) return false;
-        if (typeof payload === 'string') {
-          const s = payload.toLowerCase();
-          return s.includes('appointment') && s.includes('book') ||
-                 s.includes('booking-success') ||
-                 s.includes('form-submission-success');
+        const flat = (typeof payload === 'string' ? payload : flatten(payload, 0)).toLowerCase();
+        if (!flat) return false;
+        if (flat.includes('error') || flat.includes('failed')) return false;
+        if (flat.includes('appointment-booked')) return true;
+        if (flat.includes('booking-success')) return true;
+        if (flat.includes('booking-confirmed')) return true;
+        if (flat.includes('booking-completed')) return true;
+        if (flat.includes('appointment-confirmed')) return true;
+        if (flat.includes('appointment-completed')) return true;
+        if (flat.includes('form-submission-success')) return true;
+        if (flat.includes('survey-submission-success')) return true;
+        if ((flat.includes('appointment') || flat.includes('booking')) &&
+            (flat.includes('success') || flat.includes('booked') ||
+             flat.includes('completed') || flat.includes('confirmed'))) {
+          return true;
         }
         if (typeof payload === 'object') {
-          const t = (payload.type || payload.event || '').toString().toLowerCase();
-          if (t.includes('appointment') || t.includes('booking') || t.includes('submission')) {
-            if (t.includes('success') || t.includes('booked') || t.includes('completed') || t.includes('confirmed')) {
-              return true;
-            }
-          }
-          if (payload.success === true && (payload.appointmentId || payload.bookingId || payload.contactId)) {
-            return true;
-          }
+          if (payload.appointmentId || payload.bookingId) return true;
         }
         return false;
       }
