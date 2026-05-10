@@ -131,17 +131,17 @@ const faqs = [
   <!-- 2. Main hero with form -->
   <section class="bg-brand-navy text-white relative overflow-hidden">
     <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 30%, #C8A55B 0%, transparent 50%), radial-gradient(circle at 80% 70%, #C8A55B 0%, transparent 50%);"></div>
-    <div class="max-w-7xl mx-auto px-4 pt-14 md:pt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start relative z-10">
+    <div class="max-w-7xl mx-auto px-4 pt-6 md:pt-20 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start relative z-10">
       <!-- Left: copy -->
       <div>
-        <!-- Eyebrow / kicker -->
-        <span class="inline-block bg-brand-gold/20 border border-brand-gold/40 text-brand-gold-light text-xs md:text-sm font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+        <!-- Eyebrow / kicker — compact on mobile -->
+        <span class="inline-block bg-brand-gold/20 border border-brand-gold/40 text-brand-gold-light text-[10px] md:text-sm font-semibold uppercase tracking-widest px-2.5 py-1 md:px-4 md:py-1.5 rounded-full mb-2 md:mb-5">
           Vancouver, WA · Clark County's #1 Flooring Experts
         </span>
 
-        <!-- Google verified reviews trust pill -->
-        <div class="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full pl-2 pr-4 py-2 mb-6">
-          <svg class="w-7 h-7 flex-shrink-0" viewBox="0 0 48 48" aria-label="Google">
+        <!-- Google verified reviews trust pill — compact on mobile -->
+        <div class="inline-flex items-center gap-2 md:gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full pl-1.5 md:pl-2 pr-3 md:pr-4 py-1 md:py-2 mb-3 md:mb-6">
+          <svg class="w-5 h-5 md:w-7 md:h-7 flex-shrink-0" viewBox="0 0 48 48" aria-label="Google">
             <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
             <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
             <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0124 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
@@ -149,22 +149,22 @@ const faqs = [
           </svg>
           <div class="leading-tight">
             <div class="flex items-center gap-1.5">
-              <span class="font-heading font-bold text-white text-base">5.0</span>
-              <span class="flex gap-0.5 text-amber-400 text-sm">★★★★★</span>
+              <span class="font-heading font-bold text-white text-xs md:text-base">5.0</span>
+              <span class="flex gap-0.5 text-amber-400 text-[10px] md:text-sm">★★★★★</span>
             </div>
-            <div class="text-gray-200 text-xs">100+ verified Google reviews</div>
+            <div class="text-gray-200 text-[10px] md:text-xs">100+ verified Google reviews</div>
           </div>
         </div>
 
-        <h1 class="font-heading font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
+        <h1 class="font-heading font-bold text-3xl md:text-6xl lg:text-7xl leading-[1.05] mb-3 md:mb-6">
           Free <span class="text-brand-gold">Flooring Estimate.</span>
         </h1>
 
-        <p class="text-white text-2xl md:text-3xl font-heading font-semibold leading-snug mb-5 max-w-xl">
+        <p class="text-white text-lg md:text-3xl font-heading font-semibold leading-snug mb-3 md:mb-5 max-w-xl">
           Beautiful new floors, transparent pricing, zero pressure.
         </p>
 
-        <p class="text-gray-200 text-lg leading-relaxed max-w-lg">
+        <p class="hidden md:block text-gray-200 text-lg leading-relaxed max-w-lg">
           Tell us a little about your project — we'll set up the appointment that works best for you. In-home or in our showroom, your call.
         </p>
       </div>
