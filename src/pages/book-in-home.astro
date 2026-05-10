@@ -217,8 +217,21 @@ function formatDate(dateStr: string) {
       }
 
       function show(reason) {
-        // Window-scoped dedup — survives multiple script instances on the same page
+        // Window-scoped dedup — multiple script instances on the same page
         if (window.__aafnwScheduleFired) return;
+        // localStorage-scoped dedup — survives page reloads within 60s window
+        try {
+          const last = parseInt(localStorage.getItem('aafnwScheduleAt') || '0', 10);
+          if (last && (Date.now() - last) < 60000) {
+            dlog('Schedule recently fired (localStorage), skipping. reason was:', reason);
+            window.__aafnwScheduleFired = true;
+            // still show the overlay so the user sees confirmation
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            return;
+          }
+        } catch (_) {}
         window.__aafnwScheduleFired = true;
         dlog('show() reason:', reason);
         overlay.classList.remove('hidden');
@@ -226,9 +239,9 @@ function formatDate(dateStr: string) {
         document.body.style.overflow = 'hidden';
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (typeof window.fbq === 'function') {
-          // eventID lets Meta dedup with any server-side / GHL-side Schedule fire
           const eventID = 'aafnw-schedule-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
           window.fbq('track', 'Schedule', {}, { eventID: eventID });
+          try { localStorage.setItem('aafnwScheduleAt', Date.now().toString()); } catch (_) {}
           dlog('fbq Schedule fired, eventID=', eventID);
         } else {
           dlog('fbq not loaded — Schedule NOT fired');
